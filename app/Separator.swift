@@ -30,14 +30,28 @@ final class Separator {
             NSWorkspace.shared.openApplication(at: Live.url!, configuration: c) { _, _ in sem.signal() }
             sem.wait(); Thread.sleep(forTimeInterval: 25)          // Live and its remote scripts need their time
         }
-        // 2. a new audio track at the top, the song in its first clip slot, that clip selected
+        // 2. a new, empty Live set (Marko's own set is never touched): File → New Live Set. If Live asks to save the
+        // set it had open, that question is Marko's: the app waits until it is answered.
+        say("opening a new Live set…")
+        guard pressMenu("New Live Set", in: "File") else { throw Fail("could not press File → New Live Set (Accessibility allowed?)") }
+        Thread.sleep(forTimeInterval: 2)
+        var asked = false
+        while liveWindows().count > 1 {
+            if !asked { say("🟠 Live asks about the set it had open: answer it in Live, the app waits."); asked = true }
+            Thread.sleep(forTimeInterval: 1)
+        }
+        // 3. a new audio track at the top, the song in its first clip slot, that clip selected
         say("loading the song into Live…")
         OSC.send("/live/song/create_audio_track", [0]); Thread.sleep(forTimeInterval: 1)
         OSC.send("/live/clip_slot/create_audio_clip", [0, 0, song.path]); Thread.sleep(forTimeInterval: 3)
         OSC.send("/live/clip_slot/select", [0, 0]); Thread.sleep(forTimeInterval: 1)
-        // 3. Live's own command, from its menu bar (Accessibility); else Marko's one right-click
+        // 4. Create → Separate Stems to New Audio Tracks (Live 12.3+), then the dialog's Separate (all four stems, Live's
+        // defaults). Found on the first run, 18.10.2026: Live 12.4.6 has the command in its Create menu.
         say("separating the stems in Live…")
-        if !pressMenu(containing: "Separate Stems") {
+        if pressMenu("Separate Stems to New Audio Tracks", in: "Create") {
+            Thread.sleep(forTimeInterval: 2)
+            if !pressDialogButton(window: "Separate Stems", index: 1) { say("🟠 In Live's Separate Stems window: press Separate. The app waits.") }
+        } else {
             say("🟠 In Live: right-click the new clip (top track) → Separate Stems to New Audio Tracks. The app waits.")
         }
         // 4. the four stem files appear on disk: collected
@@ -53,6 +67,37 @@ final class Separator {
         try analyse()
         say("✓ done: \(outDir.path)")
         NSWorkspace.shared.activateFileViewerSelecting([outDir])
+    }
+
+    func liveAX() -> AXUIElement? {
+        NSRunningApplication.runningApplications(withBundleIdentifier: Live.bundleID).first.map { AXUIElementCreateApplication($0.processIdentifier) }
+    }
+    func attr(_ e: AXUIElement, _ a: String) -> CFTypeRef? { var v: CFTypeRef?; AXUIElementCopyAttributeValue(e, a as CFString, &v); return v }
+    func liveWindows() -> [AXUIElement] { liveAX().flatMap { attr($0, kAXWindowsAttribute) as? [AXUIElement] } ?? [] }
+
+    // A menu item by its exact title in a top menu (File, Create ...).
+    func pressMenu(_ item: String, in menu: String) -> Bool {
+        guard let ax = liveAX(), let bar = attr(ax, kAXMenuBarAttribute) else { return false }
+        for top in (attr(bar as! AXUIElement, kAXChildrenAttribute) as? [AXUIElement]) ?? [] where (attr(top, kAXTitleAttribute) as? String) == menu {
+            for m in (attr(top, kAXChildrenAttribute) as? [AXUIElement]) ?? [] {
+                for it in (attr(m, kAXChildrenAttribute) as? [AXUIElement]) ?? [] where (attr(it, kAXTitleAttribute) as? String) == item {
+                    appendLog("menu: \(menu) → \(item)")
+                    return AXUIElementPerformAction(it, kAXPressAction as CFString) == .success
+                }
+            }
+        }
+        appendLog("menu: \(menu) → \(item) not found"); return false
+    }
+
+    // Live's own dialogs draw their buttons without titles: the n-th button of the window's first group (Separate is 1).
+    func pressDialogButton(window: String, index: Int) -> Bool {
+        for w in liveWindows() where (attr(w, kAXTitleAttribute) as? String) == window {
+            for g in (attr(w, kAXChildrenAttribute) as? [AXUIElement]) ?? [] {
+                let buttons = ((attr(g, kAXChildrenAttribute) as? [AXUIElement]) ?? []).filter { (attr($0, kAXRoleAttribute) as? String) == kAXButtonRole }
+                if buttons.count >= index { return AXUIElementPerformAction(buttons[index - 1], kAXPressAction as CFString) == .success }
+            }
+        }
+        return false
     }
 
     // Live's menu bar, searched for the command (it may sit in Edit or Create; Live draws its context menus itself).
@@ -85,8 +130,9 @@ final class Separator {
     // has not changed for 5 s.
     func waitForStems(timeout: TimeInterval) throws -> [String: URL] {
         let home = FileManager.default.homeDirectoryForCurrentUser
-        let roots = [home.appendingPathComponent("Music/Ableton"), home.appendingPathComponent("Library/Application Support/Ableton"),
-                     song.deletingLastPathComponent(), URL(fileURLWithPath: NSTemporaryDirectory()).deletingLastPathComponent()]
+        // Live writes the stems into the set's project: for an unsaved set ~/Music/Ableton/Live Recordings/<date> Temp
+        // Project/Samples/Processed/Stems/<song> [time] (Vocals).wav (learnt 18.10.2026, Live 12.4.6)
+        let roots = [home.appendingPathComponent("Music/Ableton/Live Recordings")]
         var sizes: [URL: (Int, Date)] = [:]
         let end = Date().addingTimeInterval(timeout)
         while Date() < end {
@@ -99,7 +145,8 @@ final class Separator {
                           let v = try? u.resourceValues(forKeys: [.contentModificationDateKey, .fileSizeKey]),
                           let m = v.contentModificationDate, m > started, let size = v.fileSize else { continue }
                     let n = u.lastPathComponent.lowercased()
-                    guard let stem = stemNames.first(where: { n.contains($0) || ($0 == "others" && n.contains("other")) }) else { continue }
+                    guard u.path.contains("/Samples/Processed/Stems/"), n.contains(song.deletingPathExtension().lastPathComponent.lowercased()),
+                          let stem = stemNames.first(where: { n.hasSuffix("(\($0)).wav") }) else { continue }
                     let prev = sizes[u]
                     if prev == nil || prev!.0 != size { sizes[u] = (size, Date()) }
                     else if Date().timeIntervalSince(prev!.1) > 5 { hits[stem] = u }

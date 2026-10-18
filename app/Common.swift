@@ -3,7 +3,7 @@
 // Ableton Live and you'll separate stems, export stems and analyze them. It's just one shot action with the file picker."
 import Foundation
 
-let VERSION = 1
+let VERSION = 2
 let stemNames = ["vocals", "bass", "drums", "others"]
 let stemsRoot = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Music/Stems")
 let logFile = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Logs/stem-separation.log")

@@ -23,3 +23,12 @@ puts the separate command in the menu bar (Live draws its own context menus, whi
   start). If it is only in Live's own context menu, the app asks Marko for the right-click and waits.
 - Out: ~/Music/Stems/<song>/vocals, bass, drums, others (as Live writes them) and stems.json (per track: 25/s peak
   waveform base64, dB per second; the song itself as "song").
+
+## v2, 18.10.2026: after the first real run
+
+The first separation (Secret ID, I Follow Rivers) was run by hand with the app's steps (AbletonOSC + Accessibility from
+the terminal) to learn Live 12.4.6: see LESSONS. v2 opens a new Live set first (waits while Live asks about saving),
+presses Create → Separate Stems to New Audio Tracks and the dialog's Separate, and watches only
+~/Music/Ableton/Live Recordings/*/Samples/Processed/Stems for "<song> … (Stem).wav". **Not yet run as the app**: its first
+start asks for Accessibility (Marko's click in System Settings). The stems of both songs are in ~/Music/Stems and on the
+DJ Mantra site (v36, the educational player's stem lanes).
