@@ -1,6 +1,6 @@
 # Stem Separation (Mantra)
 
-**v1 (in progress) · github.com/markoboskoauroville/STEM_SEPARATION (private)**
+**v1 (built, waiting for Live 12.3) · github.com/markoboskoauroville/STEM_SEPARATION (private)**
 
 One action: pick a song, and Ableton Live separates it into its stems (vocals, bass, drums, others; Live 12.3 Suite,
 local, Music AI's model), the app collects the four files, and analyses them (a waveform and the activity of each
