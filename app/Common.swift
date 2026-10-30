@@ -3,7 +3,9 @@
 // Ableton Live and you'll separate stems, export stems and analyze them. It's just one shot action with the file picker."
 import Foundation
 
-let VERSION = 2
+// v3 (30.10.2026, Marko: "If permissions are not set, it needs to have text in the top right: Permissions"): PERMISSIONS
+// in amber at the top right while Accessibility is missing; a click opens that page in System Settings
+let VERSION = 3
 let stemNames = ["vocals", "bass", "drums", "others"]
 let stemsRoot = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Music/Stems")
 let logFile = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Logs/stem-separation.log")

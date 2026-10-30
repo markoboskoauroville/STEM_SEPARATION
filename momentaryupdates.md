@@ -28,4 +28,4 @@
 
 The word PERMISSIONS (amber) on the ON / OFF row, right of the spacer and left of the ✕, only while a permission the app uses is missing; a click opens that page in System Settings (MANTRA_MANIFEST swift-apps.md, last section).
 
-**Status:** request saved before the code; being built.
+**Status:** built v3 30.10.2026: the window had no ON / OFF row, so PERMISSIONS (amber) sits at the right end of its first row (beside Choose a song…) while Accessibility (pressing Live's menu and dialog) is missing; checked every 2 s, changed only on a change; a click asks once and opens the Accessibility page. The launch no longer asks with --login. The app was not running, so not started and not seen by screenshot. Marko to try.
