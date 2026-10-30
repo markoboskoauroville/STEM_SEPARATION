@@ -21,3 +21,11 @@
 > It is done.
 
 **Status:** done: both songs separated by Live 12.4.6 in a new set (his "hang mapped" untouched), stems in ~/Music/Stems.
+
+## 30.10.2026: PERMISSIONS at the top right
+
+> "please make this in every application that needs some permission. If permissions are not set, it needs to have text in the top right: "Permissions." Then I click on it, and it opens me directly to my settings page where I need to set permissions." (Marko, 30.10.2026)
+
+The word PERMISSIONS (amber) on the ON / OFF row, right of the spacer and left of the ✕, only while a permission the app uses is missing; a click opens that page in System Settings (MANTRA_MANIFEST swift-apps.md, last section).
+
+**Status:** request saved before the code; being built.
