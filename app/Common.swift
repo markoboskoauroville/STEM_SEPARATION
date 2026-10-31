@@ -5,7 +5,8 @@ import Foundation
 
 // v3 (30.10.2026, Marko: "If permissions are not set, it needs to have text in the top right: Permissions"): PERMISSIONS
 // in amber at the top right while Accessibility is missing; a click opens that page in System Settings
-let VERSION = 3
+// v4 (31.10.2026): ON OFF … TOP PERMISSIONS ✕ first row (TopRow.swift)
+let VERSION = 4
 let stemNames = ["vocals", "bass", "drums", "others"]
 let stemsRoot = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Music/Stems")
 let logFile = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Logs/stem-separation.log")

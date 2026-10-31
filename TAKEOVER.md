@@ -32,3 +32,4 @@ presses Create → Separate Stems to New Audio Tracks and the dialog's Separate,
 ~/Music/Ableton/Live Recordings/*/Samples/Processed/Stems for "<song> … (Stem).wav". **Not yet run as the app**: its first
 start asks for Accessibility (Marko's click in System Settings). The stems of both songs are in ~/Music/Stems and on the
 DJ Mantra site (v36, the educational player's stem lanes).
+- v4 (31.10.2026): app/TopRow.swift, ON OFF … TOP PERMISSIONS ✕ in AppKit in the title bar; ids `off`, `top`, `permissions`, `close`; TOP = UserDefaults `onTop`; ✕ closes only, the app stays ON; `StemSeparation --shot <png>` renders off screen.
