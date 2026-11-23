@@ -17,3 +17,4 @@
   save question is Marko's.
 - AbletonOSC's own logger breaks on create_audio_clip's arguments ("not all arguments converted"): a logging error
   only, the clip is created.
+- 23.11.2026 (v5): AbletonOSC moved to UDP 11010/11011, Suno Bridge owns 11000. Builds only on GitHub Actions; updater at start.

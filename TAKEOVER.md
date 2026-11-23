@@ -33,3 +33,6 @@ presses Create → Separate Stems to New Audio Tracks and the dialog's Separate,
 start asks for Accessibility (Marko's click in System Settings). The stems of both songs are in ~/Music/Stems and on the
 DJ Mantra site (v36, the educational player's stem lanes).
 - v4 (31.10.2026): app/TopRow.swift, ON OFF … TOP PERMISSIONS ✕ in AppKit in the title bar; ids `off`, `top`, `permissions`, `close`; TOP = UserDefaults `onTop`; ✕ closes only, the app stays ON; `StemSeparation --shot <png>` renders off screen.
+
+## v5, 23.11.2026
+AbletonOSC listens on 11010 and replies on 11011 (Suno Bridge owns 11000); OSC.swift sends to 11010. Workflow .github/workflows/build.yml builds on push to main; build.sh honours SIGN and NO_INSTALL; Updater.swift (kits/mac-updater) asks to update at start.

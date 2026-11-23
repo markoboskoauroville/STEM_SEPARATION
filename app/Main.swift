@@ -45,6 +45,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         window.center(); window.makeKeyAndOrderFront(nil); NSApp.activate(ignoringOtherApps: true)
         TopRow.float(row.onTop)                                  // v4: TOP applied at launch
+        Updater.checkAtStart()                                   // v5: asks to update at start
         // v3: never asked at login (--login); the word PERMISSIONS waits in the window instead
         _ = AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: !CommandLine.arguments.contains("--login")] as CFDictionary)
         say("Pick a song: Live separates it into vocals, bass, drums and others; the stems and stems.json go to ~/Music/Stems.")
