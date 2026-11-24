@@ -36,3 +36,11 @@ DJ Mantra site (v36, the educational player's stem lanes).
 
 ## v5, 23.11.2026
 AbletonOSC listens on 11010 and replies on 11011 (Suno Bridge owns 11000); OSC.swift sends to 11010. Workflow .github/workflows/build.yml builds on push to main; build.sh honours SIGN and NO_INSTALL; Updater.swift (kits/mac-updater) asks to update at start.
+
+## From the former README (24.11.2026)
+
+Stem Separation (Mantra), v5. One action: pick a song, and Ableton Live (12.3+ Suite, local model) separates it into vocals, bass, drums, others; the app collects the four files into ~/Music/Stems/<song>/ and analyses them (waveform and per-stem activity through time) for the DJ Mantra site player.
+
+The road (18.10.2026): 1) Swift file picker, signed "Mantra Apps". 2) Live started if needed; the song goes into a clip slot through AbletonOSC (UDP 11010, reply 11011) via a handler calling ClipSlot.create_audio_clip(path). 3) "Separate Stems to New Audio Tracks" on that clip, the one step done through Live menus. 4) The new tracks clips file_path through AbletonOSC; stems copied out. 5) Analysis: 3-band waveform and level per bar (djay Pro grid when known).
+
+Other documents: LESSONS.md (before changing a decision), momentaryupdates.md (Marko requests word for word).
